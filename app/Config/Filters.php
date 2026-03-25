@@ -15,7 +15,7 @@ use CodeIgniter\Filters\SecureHeaders;
 class Filters extends BaseConfig
 {
     /**
-     * Filter aliases
+     * Filter aliases — mapped to their fully-qualified class names
      */
     public array $aliases = [
         'csrf'          => CSRF::class,
@@ -26,15 +26,15 @@ class Filters extends BaseConfig
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'forcehttps'    => ForceHTTPS::class,
-        'locale'        => \App\Filters\LocaleFilter::class,
 
-        // Phase 3 — uncomment when auth is implemented
-        // 'auth'  => \App\Filters\AuthFilter::class,
-        // 'admin' => \App\Filters\AdminFilter::class,
+        // Application filters
+        'locale'        => \App\Filters\LocaleFilter::class,
+        'auth'          => \App\Filters\AuthFilter::class,
+        'admin'         => \App\Filters\AdminFilter::class,
     ];
 
     /**
-     * Always-run filters (framework-level)
+     * Framework-required filters (always run)
      */
     public array $required = [
         'before' => [
@@ -53,8 +53,8 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
-            'locale',                       // Set locale from session
-            'csrf' => ['except' => [        // CSRF protection (except API)
+            'locale',                        // Restore language from session
+            'csrf' => ['except' => [         // Skip CSRF for API/webhook endpoints
                 'api/*',
                 'ping',
             ]],
@@ -68,7 +68,7 @@ class Filters extends BaseConfig
     public array $methods = [];
 
     /**
-     * Per-URI filters
+     * Per-URI-pattern filters
      */
     public array $filters = [];
 }

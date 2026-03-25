@@ -75,6 +75,23 @@
             </div>
             <?php endif; ?>
 
+            <!-- Flash messages -->
+            <?php if ($flashSuccess = session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span><?= esc($flashSuccess) ?></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($flashError = session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span><?= esc($flashError) ?></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <!-- Child view content -->
             <?= $this->renderSection('content') ?>
 
