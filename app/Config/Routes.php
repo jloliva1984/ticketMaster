@@ -20,15 +20,12 @@ $routes->setAutoRoute(false);
 | Public Routes — no auth required
 |--------------------------------------------------------------------------
 */
-
-// Health check
 $routes->get('/ping', static function () {
     header('Content-Type: application/json');
     echo json_encode(['status' => 'ok', 'app' => 'TicketMaster.LT']);
     exit;
 });
 
-// Language switcher
 $routes->get('lang/(:segment)', 'Language::switch/$1');
 
 // Authentication
@@ -40,7 +37,7 @@ $routes->group('auth', ['namespace' => 'App\Controllers\Auth'], static function 
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes — require auth filter
+| Protected Routes — require auth
 |--------------------------------------------------------------------------
 */
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
@@ -48,37 +45,58 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // Dashboard
     $routes->get('/', 'Home::index');
 
-    // Phase 4 — Catalog CRUDs
-    // $routes->resource('quarries', ['controller' => 'Quarries']);
-    // $routes->resource('trucks',   ['controller' => 'Trucks']);
+    // ── Catalog ─────────────────────────────────────────────────
+    // Quarries
+    $routes->get('quarries',              'Quarries::index');
+    $routes->get('quarries/data',         'Quarries::data');
+    $routes->get('quarries/(:num)/edit',  'Quarries::edit/$1');
+    $routes->post('quarries',             'Quarries::store');
+    $routes->post('quarries/(:num)',      'Quarries::update/$1');
+    $routes->delete('quarries/(:num)',    'Quarries::destroy/$1');
 
-    // Phase 4 — Users (admin only)
-    // $routes->group('users', ['filter' => 'admin', 'controller' => 'Users'], static function ($routes) {
-    //     $routes->get('/',             'Users::index');
-    //     $routes->get('create',        'Users::create');
-    //     $routes->post('/',            'Users::store');
-    //     $routes->get('(:num)/edit',   'Users::edit/$1');
-    //     $routes->post('(:num)',       'Users::update/$1');
-    //     $routes->delete('(:num)',     'Users::destroy/$1');
-    //     $routes->get('data',          'Users::data');      // DataTable AJAX
-    // });
+    // Trucks
+    $routes->get('trucks',                         'Trucks::index');
+    $routes->get('trucks/data',                    'Trucks::data');
+    $routes->get('trucks/(:num)/edit',             'Trucks::edit/$1');
+    $routes->get('trucks/chofer/(:segment)',        'Trucks::chofer/$1');
+    $routes->post('trucks',                        'Trucks::store');
+    $routes->post('trucks/(:num)',                 'Trucks::update/$1');
+    $routes->delete('trucks/(:num)',               'Trucks::destroy/$1');
 
-    // Phase 5 — Invoices
-    // $routes->resource('invoices', ['controller' => 'Invoices']);
-    // $routes->get('invoices/data', 'Invoices::data');
+    // ── Users (admin only) ───────────────────────────────────────
+    $routes->group('users', ['filter' => 'admin'], static function ($routes) {
+        $routes->get('/',           'Users::index');
+        $routes->get('data',        'Users::data');
+        $routes->get('(:num)/edit', 'Users::edit/$1');
+        $routes->post('/',          'Users::store');
+        $routes->post('(:num)',     'Users::update/$1');
+        $routes->delete('(:num)',   'Users::destroy/$1');
+    });
+
+    // ── Invoices (Phase 5) ───────────────────────────────────────
+    // $routes->get('invoices',                        'Invoices::index');
+    // $routes->get('invoices/data',                   'Invoices::data');
+    // $routes->get('invoices/(:num)/edit',            'Invoices::edit/$1');
     // $routes->get('invoices/(:num)/export/(:alpha)', 'Invoices::export/$1/$2');
+    // $routes->post('invoices',                       'Invoices::store');
+    // $routes->post('invoices/(:num)',                'Invoices::update/$1');
+    // $routes->delete('invoices/(:num)',              'Invoices::destroy/$1');
 
-    // Phase 6 — Tasks
-    // $routes->resource('tasks', ['controller' => 'Tasks']);
-    // $routes->get('tasks/data', 'Tasks::data');
-    // $routes->post('tasks/(:num)/deliver', 'Tasks::markDelivered/$1');
+    // ── Tasks (Phase 6) ──────────────────────────────────────────
+    // $routes->get('tasks',                   'Tasks::index');
+    // $routes->get('tasks/data',              'Tasks::data');
+    // $routes->get('tasks/(:num)/edit',       'Tasks::edit/$1');
+    // $routes->post('tasks',                  'Tasks::store');
+    // $routes->post('tasks/(:num)',           'Tasks::update/$1');
+    // $routes->delete('tasks/(:num)',         'Tasks::destroy/$1');
+    // $routes->post('tasks/(:num)/deliver',   'Tasks::markDelivered/$1');
 
-    // Phase 7 — Reports
-    // $routes->get('reports',              'Reports::index');
-    // $routes->get('reports/export/(:alpha)', 'Reports::export/$1');
+    // ── Reports (Phase 7) ────────────────────────────────────────
+    // $routes->get('reports',                      'Reports::index');
+    // $routes->get('reports/export/(:alpha)',       'Reports::export/$1');
 
-    // Phase 8 — Unmatched tickets
-    // $routes->get('unmatched-tickets',                   'UnmatchedTickets::index');
-    // $routes->get('unmatched-tickets/data',              'UnmatchedTickets::data');
-    // $routes->post('unmatched-tickets/match/(:num)',     'UnmatchedTickets::match/$1');
+    // ── Unmatched Tickets (Phase 8) ──────────────────────────────
+    // $routes->get('unmatched-tickets',                    'UnmatchedTickets::index');
+    // $routes->get('unmatched-tickets/data',               'UnmatchedTickets::data');
+    // $routes->post('unmatched-tickets/match/(:num)',      'UnmatchedTickets::match/$1');
 });
