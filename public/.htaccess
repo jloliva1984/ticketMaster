@@ -1,0 +1,66 @@
+# ============================================================
+# TicketMaster.LT — public/.htaccess
+# Force PHP 8.1 + Clean URLs (no index.php)
+# Compatible with Hostinger Shared Hosting (Apache + LiteSpeed)
+# ============================================================
+
+# --- Force PHP 8.1 -------------------------------------------
+# Hostinger standard handler (try first)
+AddHandler application/x-httpd-php81 .php
+
+# Alternative handler (uncomment if the above doesn't work)
+# AddType application/x-httpd-ea-php81 .php
+
+# Disable directory listing
+Options -Indexes -MultiViews
+
+# Follow symlinks (required for mod_rewrite)
+Options +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- Base path -------------------------------------------
+    # If app lives at https://domain.com/ticketmaster/public/
+    # Set: RewriteBase /ticketmaster/public/
+    #
+    # If app lives at document root (subdomain):
+    # Set: RewriteBase /
+    #
+    RewriteBase /
+
+    # --- Pass Authorization header to PHP --------------------
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # --- Remove trailing slashes (except root) ---------------
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # --- Skip real files and directories ---------------------
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # --- Route everything else to index.php ------------------
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# --- Security headers ----------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Block sensitive file access ----------------------------
+<FilesMatch "(^\.env|\.gitignore|composer\.(json|lock)|phpunit\.xml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# --- Compression (optional but recommended) -----------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+</IfModule>

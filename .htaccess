@@ -1,0 +1,32 @@
+# ============================================================
+# TicketMaster.LT — ROOT .htaccess
+# Redirects all traffic from the project root to public/
+#
+# SCENARIO A (Subdirectory install — most common on Hostinger):
+#   URL: https://domain.com/ticketmaster/
+#   Files at: public_html/ticketmaster/
+#   This file: public_html/ticketmaster/.htaccess
+# ============================================================
+
+# Force PHP 8.1 at root level too
+AddHandler application/x-httpd-php81 .php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to sensitive project files
+    RewriteRule ^(app|writable|vendor|tests)(/|$) - [F,L]
+
+    # If already in public/, don't redirect again
+    RewriteCond %{REQUEST_URI} !^/ticketmaster/public/
+
+    # Redirect everything else to public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Deny access to all files at root level by default
+# (public/ has its own .htaccess that allows access)
+<FilesMatch "\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

@@ -1,0 +1,24 @@
+/vendor/
+.env
+.DS_Store
+Thumbs.db
+
+# Writable directories - keep structure but not content
+/writable/cache/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+!/writable/cache/.gitkeep
+!/writable/logs/.gitkeep
+!/writable/session/.gitkeep
+!/writable/uploads/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# PHPUnit
+/build/
+/coverage/

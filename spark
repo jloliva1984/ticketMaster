@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * CodeIgniter Spark
+ * CLI bootstrap for CodeIgniter 4
+ */
+
+// Ensure we're running from the CLI
+if (PHP_SAPI !== 'cli') {
+    echo 'Spark must be run from the command line.' . PHP_EOL;
+    exit(1);
+}
+
+// Define minimum PHP version
+const SPARK_PHP_MIN_VERSION = '8.1';
+
+if (version_compare(PHP_VERSION, SPARK_PHP_MIN_VERSION, '<')) {
+    echo sprintf(
+        'PHP version %s or higher is required. Current version: %s' . PHP_EOL,
+        SPARK_PHP_MIN_VERSION,
+        PHP_VERSION
+    );
+    exit(1);
+}
+
+// FCPATH = the directory where public/index.php lives
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
+
+// Load Paths config
+require __DIR__ . '/app/Config/Paths.php';
+
+$pathsConfig = new Config\Paths();
+
+// Resolve system path
+define('SYSTEMPATH', rtrim($pathsConfig->systemDirectory, '\\/') . DIRECTORY_SEPARATOR);
+define('APPPATH',    rtrim($pathsConfig->appDirectory,    '\\/') . DIRECTORY_SEPARATOR);
+define('ROOTPATH',   realpath(APPPATH . '../') . DIRECTORY_SEPARATOR);
+define('WRITEPATH',  rtrim($pathsConfig->writableDirectory, '\\/') . DIRECTORY_SEPARATOR);
+define('TESTPATH',   rtrim($pathsConfig->testsDirectory,    '\\/') . DIRECTORY_SEPARATOR);
+
+if (! isset($pathsConfig->viewDirectory)) {
+    define('VIEWPATH', APPPATH . 'Views' . DIRECTORY_SEPARATOR);
+} else {
+    define('VIEWPATH', rtrim($pathsConfig->viewDirectory, '\\/') . DIRECTORY_SEPARATOR);
+}
+
+// Load framework bootstrap
+require SYSTEMPATH . 'bootstrap.php';
