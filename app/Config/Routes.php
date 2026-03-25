@@ -98,8 +98,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('tasks/(:num)/deliver',  'Tasks::markDelivered/$1');
 
     // ── Reports (Phase 7) ────────────────────────────────────────
-    // $routes->get('reports',                      'Reports::index');
-    // $routes->get('reports/export/(:alpha)',       'Reports::export/$1');
+    $routes->get('reports',                      'Reports::index');
+    $routes->get('reports/export/excel',         'Reports::exportExcel');
+    $routes->get('reports/export/pdf',           'Reports::exportPdf');
 
     // ── Unmatched Tickets (Phase 8) ──────────────────────────────
     // $routes->get('unmatched-tickets',                    'UnmatchedTickets::index');

@@ -90,6 +90,16 @@ return [
     'remember'    => 'Recordarme',
     'login_title' => 'Acceder a TicketMaster.LT',
 
+    // Reportes
+    'from'        => 'Desde',
+    'to'          => 'Hasta',
+    'group_by'    => 'Agrupar Por',
+    'trucks'      => 'Camiones',
+    'tickets'     => 'Tickets',
+    'by_quarry'   => 'por Cantera',
+    'paid'        => 'Pagado',
+    'report_hint' => 'Seleccione un rango de fechas y haga clic en Buscar para generar el reporte.',
+
     // Roles
     'role_admin' => 'Administrador',
     'role_user'  => 'Usuario',

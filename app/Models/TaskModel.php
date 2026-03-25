@@ -62,20 +62,65 @@ class TaskModel extends Model
         ]);
     }
 
-    /** Summary by truck/driver for reports */
-    public function summaryByTruck(string $from, string $to): array
+    /** Summary grouped by truck — for reports */
+    public function reportByTruck(string $from, string $to): array
     {
         return $this->db->table('tasks t')
-            ->select('tr.no_camion, t.nombre_chofer,
-                      COUNT(t.id) AS total_tasks,
-                      SUM(t.monto_total) AS total_amount,
-                      SUM(CASE WHEN t.status = "delivered" THEN 1 ELSE 0 END) AS delivered_count')
-            ->join('trucks tr', 'tr.id = t.truck_id', 'left')
+            ->select('tr.no_camion,
+                      t.nombre_chofer,
+                      COUNT(DISTINCT t.id)                                            AS total_tasks,
+                      COUNT(tt.id)                                                    AS total_tickets,
+                      COALESCE(SUM(tt.rate), 0)                                       AS total_amount,
+                      SUM(CASE WHEN t.status = "delivered" THEN 1 ELSE 0 END)         AS delivered_tasks')
+            ->join('trucks tr',       'tr.id = t.truck_id',   'left')
+            ->join('task_tickets tt', 'tt.task_id = t.id',    'left')
             ->where('t.deleted_at IS NULL')
-            ->where('t.created_at >=', $from . ' 00:00:00')
-            ->where('t.created_at <=', $to . ' 23:59:59')
+            ->where('DATE(t.created_at) >=', $from)
+            ->where('DATE(t.created_at) <=', $to)
             ->groupBy('t.truck_id')
             ->orderBy('total_amount', 'DESC')
             ->get()->getResultArray();
+    }
+
+    /** Summary grouped by driver (chofer) — for reports */
+    public function reportByDriver(string $from, string $to): array
+    {
+        return $this->db->table('tasks t')
+            ->select('t.nombre_chofer,
+                      GROUP_CONCAT(DISTINCT tr.no_camion ORDER BY tr.no_camion SEPARATOR ", ") AS camiones,
+                      COUNT(DISTINCT t.id)                                            AS total_tasks,
+                      COUNT(tt.id)                                                    AS total_tickets,
+                      COALESCE(SUM(tt.rate), 0)                                       AS total_amount,
+                      SUM(CASE WHEN t.status = "delivered" THEN 1 ELSE 0 END)         AS delivered_tasks')
+            ->join('trucks tr',       'tr.id = t.truck_id',   'left')
+            ->join('task_tickets tt', 'tt.task_id = t.id',    'left')
+            ->where('t.deleted_at IS NULL')
+            ->where('DATE(t.created_at) >=', $from)
+            ->where('DATE(t.created_at) <=', $to)
+            ->groupBy('t.nombre_chofer')
+            ->orderBy('total_amount', 'DESC')
+            ->get()->getResultArray();
+    }
+
+    /** Detail rows for a single truck within a date range (used in PDF) */
+    public function detailByTruck(int $truckId, string $from, string $to): array
+    {
+        return $this->db->table('tasks t')
+            ->select('t.id, t.periodo, t.status, t.monto_total, t.created_at,
+                      COUNT(tt.id) AS ticket_count')
+            ->join('task_tickets tt', 'tt.task_id = t.id', 'left')
+            ->where('t.deleted_at IS NULL')
+            ->where('t.truck_id', $truckId)
+            ->where('DATE(t.created_at) >=', $from)
+            ->where('DATE(t.created_at) <=', $to)
+            ->groupBy('t.id')
+            ->orderBy('t.created_at', 'ASC')
+            ->get()->getResultArray();
+    }
+
+    /** @deprecated kept for dashboard compat */
+    public function summaryByTruck(string $from, string $to): array
+    {
+        return $this->reportByTruck($from, $to);
     }
 }

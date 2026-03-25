@@ -90,6 +90,16 @@ return [
     'remember' => 'Remember me',
     'login_title' => 'Sign in to TicketMaster.LT',
 
+    // Reports
+    'from'        => 'From',
+    'to'          => 'To',
+    'group_by'    => 'Group By',
+    'trucks'      => 'Trucks',
+    'tickets'     => 'Tickets',
+    'by_quarry'   => 'by Quarry',
+    'paid'        => 'Paid',
+    'report_hint' => 'Select a date range and click Search to generate the report.',
+
     // Roles
     'role_admin' => 'Administrator',
     'role_user'  => 'User',

@@ -62,18 +62,33 @@ class InvoiceModel extends Model
             ->get()->getRowArray();
     }
 
-    /** Summary grouped by quarry for reports */
+    /** Summary grouped by quarry — for reports */
     public function summaryByQuarry(string $from, string $to): array
     {
         return $this->db->table('invoices i')
-            ->select('q.nombre_cantera, COUNT(i.id) AS total_invoices,
-                      SUM(i.monto_total) AS total_amount')
-            ->join('quarries q', 'q.id = i.cantera_id', 'left')
+            ->select('q.nombre_cantera,
+                      COUNT(i.id)          AS total_invoices,
+                      COUNT(it.id)         AS total_tickets,
+                      SUM(i.monto_total)   AS total_amount,
+                      SUM(CASE WHEN i.status = "paid" THEN i.monto_total ELSE 0 END) AS paid_amount')
+            ->join('quarries q',       'q.id = i.cantera_id',  'left')
+            ->join('invoice_tickets it', 'it.invoice_id = i.id', 'left')
             ->where('i.deleted_at IS NULL')
             ->where('i.fecha >=', $from)
             ->where('i.fecha <=', $to)
             ->groupBy('i.cantera_id')
             ->orderBy('total_amount', 'DESC')
             ->get()->getResultArray();
+    }
+
+    /** Grand totals for a date range — for report footers */
+    public function totals(string $from, string $to): array
+    {
+        return $this->db->table('invoices')
+            ->select('COUNT(id) AS total_invoices, SUM(monto_total) AS grand_total')
+            ->where('deleted_at IS NULL')
+            ->where('fecha >=', $from)
+            ->where('fecha <=', $to)
+            ->get()->getRowArray() ?? ['total_invoices' => 0, 'grand_total' => 0];
     }
 }
