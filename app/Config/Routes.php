@@ -74,13 +74,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     });
 
     // ── Invoices (Phase 5) ───────────────────────────────────────
-    // $routes->get('invoices',                        'Invoices::index');
-    // $routes->get('invoices/data',                   'Invoices::data');
-    // $routes->get('invoices/(:num)/edit',            'Invoices::edit/$1');
-    // $routes->get('invoices/(:num)/export/(:alpha)', 'Invoices::export/$1/$2');
-    // $routes->post('invoices',                       'Invoices::store');
-    // $routes->post('invoices/(:num)',                'Invoices::update/$1');
-    // $routes->delete('invoices/(:num)',              'Invoices::destroy/$1');
+    $routes->get('invoices',                         'Invoices::index');
+    $routes->get('invoices/data',                    'Invoices::data');
+    $routes->get('invoices/export/excel',            'Invoices::exportExcel');
+    $routes->get('invoices/create',                  'Invoices::create');
+    $routes->post('invoices',                        'Invoices::store');
+    $routes->get('invoices/(:num)/show',             'Invoices::show/$1');
+    $routes->get('invoices/(:num)/edit',             'Invoices::edit/$1');
+    $routes->post('invoices/(:num)',                 'Invoices::update/$1');
+    $routes->delete('invoices/(:num)',               'Invoices::destroy/$1');
+    $routes->get('invoices/(:num)/export/pdf',       'Invoices::exportPdf/$1');
+    $routes->get('invoices/(:num)/pdf',              'Invoices::servePdf/$1');
 
     // ── Tasks (Phase 6) ──────────────────────────────────────────
     // $routes->get('tasks',                   'Tasks::index');
