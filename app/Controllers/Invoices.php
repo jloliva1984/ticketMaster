@@ -300,7 +300,7 @@ class Invoices extends BaseController
 
     // ── Private helpers ───────────────────────────────────────────
 
-    private function validateInvoice(?int $id = null): array|true
+    private function validateInvoice(?int $id = null): array|bool
     {
         $rules = [
             'no_factura' => 'required|max_length[50]' . ($id ? "|is_unique[invoices.no_factura,id,{$id}]" : '|is_unique[invoices.no_factura]'),

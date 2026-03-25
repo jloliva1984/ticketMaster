@@ -214,7 +214,7 @@ class Tasks extends BaseController
 
     // ── Private helpers ───────────────────────────────────────────
 
-    private function validateTask(): array|true
+    private function validateTask(): array|bool
     {
         $rules = [
             'truck_id'      => 'required|integer',
