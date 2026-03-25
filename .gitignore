@@ -1,4 +1,4 @@
-/vendor/
+# /vendor/ incluido en repo para deploy directo sin composer
 .env
 .DS_Store
 Thumbs.db
