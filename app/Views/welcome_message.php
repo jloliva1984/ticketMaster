@@ -49,7 +49,7 @@
         <div class="subtitle">Sistema de Gestión de Tickets y Facturas</div>
         <div class="badge">✓ FASE 1 — ESTRUCTURA BASE OK</div>
         <div class="info">
-            <p><strong>Framework:</strong> CodeIgniter <?= CI_VERSION ?></p>
+            <p><strong>Framework:</strong> CodeIgniter <?= \CodeIgniter\CodeIgniter::CI_VERSION ?></p>
             <p><strong>PHP:</strong> <?= PHP_VERSION ?></p>
             <p><strong>Ambiente:</strong> <?= ENVIRONMENT ?></p>
         </div>
