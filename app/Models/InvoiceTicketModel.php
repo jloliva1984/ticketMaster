@@ -54,4 +54,32 @@ class InvoiceTicketModel extends Model
             ->where('i.deleted_at IS NULL')
             ->get()->getResultArray();
     }
+
+    /**
+     * Invoice tickets for a given quarry that have no matching task ticket.
+     * Used to populate the "Match" modal dropdown.
+     */
+    public function unmatchedForQuarry(int $canterId): array
+    {
+        $sql = "SELECT
+                    it.id,
+                    it.no_ticket,
+                    it.fecha,
+                    it.tipo_trabajo,
+                    i.no_factura,
+                    i.id AS invoice_id
+                FROM invoice_tickets it
+                JOIN invoices i ON i.id = it.invoice_id AND i.deleted_at IS NULL
+                WHERE it.cantera_id = ?
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM task_tickets tt
+                      JOIN tasks t ON t.id = tt.task_id AND t.deleted_at IS NULL
+                      WHERE tt.cantera_id = it.cantera_id
+                        AND CAST(tt.no_ticket AS UNSIGNED) = CAST(it.no_ticket AS UNSIGNED)
+                  )
+                ORDER BY CAST(it.no_ticket AS UNSIGNED)";
+
+        return $this->db->query($sql, [$canterId])->getResultArray();
+    }
 }

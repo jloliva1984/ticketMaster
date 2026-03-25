@@ -69,7 +69,7 @@ $locale     = service('request')->getLocale();
                 </li>
 
                 <!-- Tickets sin Factura (Phase 8) -->
-                <li class="<?= $activeMenu === 'unmatched' ? 'active' : '' ?>">
+                <li class="<?= $activeMenu === 'unmatched_tickets' ? 'active' : '' ?>">
                     <a href="<?= base_url('unmatched-tickets') ?>" class="sidebar-link">
                         <i class="bi bi-exclamation-triangle menu-icon text-warning"></i>
                         <span><?= lang('General.unmatched_tickets') ?></span>

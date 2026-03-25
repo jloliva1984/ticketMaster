@@ -90,6 +90,17 @@ return [
     'remember'    => 'Recordarme',
     'login_title' => 'Acceder a TicketMaster.LT',
 
+    // Tickets sin Factura (Fase 8)
+    'unmatched_hint'  => 'Los tickets de tarea a continuación no tienen un ticket de factura coincidente (comparado por número de ticket, ignorando ceros iniciales).',
+    'match_ticket'    => 'Conciliar Ticket',
+    'task_ticket'     => 'Ticket de Tarea',
+    'match_hint'      => 'Seleccione el ticket de factura que corresponde a este ticket de tarea. El número del ticket de tarea será actualizado para coincidir.',
+    'no_unmatched'    => 'No se encontraron tickets sin conciliar.',
+    'no_candidates'   => 'No se encontraron tickets de factura disponibles para esta cantera.',
+    'loading'         => 'Cargando',
+    'matched'         => 'Ticket conciliado correctamente.',
+    'refresh'         => 'Actualizar',
+
     // Reportes
     'from'        => 'Desde',
     'to'          => 'Hasta',

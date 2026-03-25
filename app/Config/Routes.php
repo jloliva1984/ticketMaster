@@ -103,7 +103,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('reports/export/pdf',           'Reports::exportPdf');
 
     // ── Unmatched Tickets (Phase 8) ──────────────────────────────
-    // $routes->get('unmatched-tickets',                    'UnmatchedTickets::index');
-    // $routes->get('unmatched-tickets/data',               'UnmatchedTickets::data');
-    // $routes->post('unmatched-tickets/match/(:num)',      'UnmatchedTickets::match/$1');
+    $routes->get('unmatched-tickets',                    'UnmatchedTickets::index');
+    $routes->get('unmatched-tickets/data',               'UnmatchedTickets::data');
+    $routes->get('unmatched-tickets/candidates',         'UnmatchedTickets::candidates');
+    $routes->post('unmatched-tickets/match/(:num)',      'UnmatchedTickets::match/$1');
 });

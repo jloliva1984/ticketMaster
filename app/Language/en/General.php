@@ -90,6 +90,17 @@ return [
     'remember' => 'Remember me',
     'login_title' => 'Sign in to TicketMaster.LT',
 
+    // Unmatched Tickets (Phase 8)
+    'unmatched_hint'  => 'Task tickets below have no matching invoice ticket (compared by ticket number, ignoring leading zeros).',
+    'match_ticket'    => 'Match Ticket',
+    'task_ticket'     => 'Task Ticket',
+    'match_hint'      => 'Select the invoice ticket that corresponds to this task ticket. The task ticket number will be updated to match.',
+    'no_unmatched'    => 'No unmatched tickets found.',
+    'no_candidates'   => 'No available invoice tickets found for this quarry.',
+    'loading'         => 'Loading',
+    'matched'         => 'Ticket matched successfully.',
+    'refresh'         => 'Refresh',
+
     // Reports
     'from'        => 'From',
     'to'          => 'To',
