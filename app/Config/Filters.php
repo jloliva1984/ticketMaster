@@ -15,7 +15,7 @@ use CodeIgniter\Filters\SecureHeaders;
 class Filters extends BaseConfig
 {
     /**
-     * Configured filter aliases
+     * Filter aliases
      */
     public array $aliases = [
         'csrf'          => CSRF::class,
@@ -26,17 +26,19 @@ class Filters extends BaseConfig
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'forcehttps'    => ForceHTTPS::class,
-        // Phase 3: auth filter
-        // 'auth'          => \App\Filters\AuthFilter::class,
-        // 'admin'         => \App\Filters\AdminFilter::class,
+        'locale'        => \App\Filters\LocaleFilter::class,
+
+        // Phase 3 — uncomment when auth is implemented
+        // 'auth'  => \App\Filters\AuthFilter::class,
+        // 'admin' => \App\Filters\AdminFilter::class,
     ];
 
     /**
-     * List of filter processing rules.
+     * Always-run filters (framework-level)
      */
     public array $required = [
         'before' => [
-            'forcehttps',  // Redirect HTTP → HTTPS in production
+            'forcehttps',
             'pagecache',
         ],
         'after' => [
@@ -47,22 +49,26 @@ class Filters extends BaseConfig
     ];
 
     /**
-     * Filters that run before every request.
+     * Global filters — run on every request
      */
     public array $globals = [
         'before' => [
-            'csrf' => ['except' => []],
+            'locale',                       // Set locale from session
+            'csrf' => ['except' => [        // CSRF protection (except API)
+                'api/*',
+                'ping',
+            ]],
         ],
         'after' => [],
     ];
 
     /**
-     * Filters that apply to specific HTTP methods.
+     * Per-HTTP-method filters
      */
     public array $methods = [];
 
     /**
-     * Filters that apply to specific URI patterns.
+     * Per-URI filters
      */
     public array $filters = [];
 }

@@ -23,7 +23,7 @@ abstract class BaseController extends Controller
     /**
      * Helpers loaded for every request.
      */
-    protected $helpers = ['url', 'form', 'text'];
+    protected $helpers = ['url', 'form', 'text', 'language'];
 
     /**
      * Current logged-in user (set by AuthFilter in Phase 3).

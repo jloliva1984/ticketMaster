@@ -3,13 +3,35 @@
 namespace App\Controllers;
 
 /**
- * Home Controller
- * Temporary landing page — will be replaced by auth redirect in Phase 3.
+ * Home / Dashboard Controller
  */
 class Home extends BaseController
 {
     public function index(): string
     {
-        return view('welcome_message');
+        // TODO Phase 3: redirect to login if not authenticated
+
+        $data = [
+            'pageTitle'  => lang('General.dashboard'),
+            'activeMenu' => 'dashboard',
+
+            // Stats — populated from models in Phase 4+
+            'stats' => [
+                'invoices'  => 0,
+                'tasks'     => 0,
+                'quarries'  => 0,
+                'unmatched' => 0,
+            ],
+
+            'recentTrucks' => [],
+
+            // Phase 3 will set this from session
+            'currentUser' => [
+                'name' => 'Admin',
+                'role' => 'admin',
+            ],
+        ];
+
+        return view('home/dashboard', $data);
     }
 }
