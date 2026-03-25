@@ -62,8 +62,15 @@ return [
 
     // Estados
     'status_pending'   => 'Pendiente',
+    'status_open'      => 'Abierta',
     'status_delivered' => 'Entregada',
+    'status_paid'      => 'Pagada',
     'status_matched'   => 'Conciliado',
+
+    // Tareas
+    'period'          => 'Período',
+    'mark_delivered'  => 'Marcar como Entregada',
+    'delivered_at'    => 'Fecha Entrega',
 
     // Validación / mensajes
     'required'       => 'Este campo es requerido.',

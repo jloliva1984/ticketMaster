@@ -87,13 +87,15 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('invoices/(:num)/pdf',              'Invoices::servePdf/$1');
 
     // ── Tasks (Phase 6) ──────────────────────────────────────────
-    // $routes->get('tasks',                   'Tasks::index');
-    // $routes->get('tasks/data',              'Tasks::data');
-    // $routes->get('tasks/(:num)/edit',       'Tasks::edit/$1');
-    // $routes->post('tasks',                  'Tasks::store');
-    // $routes->post('tasks/(:num)',           'Tasks::update/$1');
-    // $routes->delete('tasks/(:num)',         'Tasks::destroy/$1');
-    // $routes->post('tasks/(:num)/deliver',   'Tasks::markDelivered/$1');
+    $routes->get('tasks',                  'Tasks::index');
+    $routes->get('tasks/data',             'Tasks::data');
+    $routes->get('tasks/create',           'Tasks::create');
+    $routes->post('tasks',                 'Tasks::store');
+    $routes->get('tasks/(:num)/show',      'Tasks::show/$1');
+    $routes->get('tasks/(:num)/edit',      'Tasks::edit/$1');
+    $routes->post('tasks/(:num)',          'Tasks::update/$1');
+    $routes->delete('tasks/(:num)',        'Tasks::destroy/$1');
+    $routes->post('tasks/(:num)/deliver',  'Tasks::markDelivered/$1');
 
     // ── Reports (Phase 7) ────────────────────────────────────────
     // $routes->get('reports',                      'Reports::index');

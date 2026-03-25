@@ -62,8 +62,15 @@ return [
 
     // Statuses
     'status_pending'   => 'Pending',
+    'status_open'      => 'Open',
     'status_delivered' => 'Delivered',
+    'status_paid'      => 'Paid',
     'status_matched'   => 'Matched',
+
+    // Tasks
+    'period'          => 'Period',
+    'mark_delivered'  => 'Mark as Delivered',
+    'delivered_at'    => 'Delivered At',
 
     // Validation / messages
     'required'       => 'This field is required.',
