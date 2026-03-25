@@ -87,14 +87,17 @@ class Routes extends BaseCommand
 
         // Set HTTP_HOST
         if ($host !== null) {
-            service('superglobals')->setServer('HTTP_HOST', $host);
+            $request              = service('request');
+            $_SERVER              = $request->getServer();
+            $_SERVER['HTTP_HOST'] = $host;
+            $request->setGlobal('server', $_SERVER);
         }
 
         $collection = service('routes')->loadRoutes();
 
         // Reset HTTP_HOST
         if ($host !== null) {
-            service('superglobals')->unsetServer('HTTP_HOST');
+            unset($_SERVER['HTTP_HOST']);
         }
 
         $methods = Router::HTTP_METHODS;

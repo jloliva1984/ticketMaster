@@ -55,7 +55,7 @@ class Connection extends BaseConnection
      *
      * @see https://www.php.net/manual/en/sqlite3.busytimeout
      */
-    protected ?int $busyTimeout = null;
+    protected $busyTimeout;
 
     /**
      * The setting of the "synchronous" flag
@@ -115,8 +115,20 @@ class Connection extends BaseConnection
 
             return $sqlite;
         } catch (Exception $e) {
-            throw new DatabaseException('SQLite3 error: ' . $e->getMessage(), $e->getCode(), $e);
+            throw new DatabaseException('SQLite3 error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Keep or establish the connection if no queries have been sent for
+     * a length of time exceeding the server's idle timeout.
+     *
+     * @return void
+     */
+    public function reconnect()
+    {
+        $this->close();
+        $this->initialize();
     }
 
     /**
@@ -163,12 +175,7 @@ class Connection extends BaseConnection
                 ? $this->connID->exec($sql)
                 : $this->connID->query($sql);
         } catch (Exception $e) {
-            log_message('error', "{message}\nin {exFile} on line {exLine}.\n{trace}", [
-                'message' => $e->getMessage(),
-                'exFile'  => clean_path($e->getFile()),
-                'exLine'  => $e->getLine(),
-                'trace'   => render_backtrace($e->getTrace()),
-            ]);
+            log_message('error', (string) $e);
 
             if ($this->DBDebug) {
                 throw new DatabaseException($e->getMessage(), $e->getCode(), $e);

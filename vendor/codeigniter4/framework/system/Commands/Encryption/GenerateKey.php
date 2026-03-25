@@ -17,7 +17,6 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Config\DotEnv;
 use CodeIgniter\Encryption\Encryption;
-use Config\Paths;
 
 /**
  * Generates a new encryption key.
@@ -102,7 +101,7 @@ class GenerateKey extends BaseCommand
         // force DotEnv to reload the new env vars
         putenv('encryption.key');
         unset($_ENV['encryption.key'], $_SERVER['encryption.key']);
-        $dotenv = new DotEnv((new Paths())->envDirectory ?? ROOTPATH);
+        $dotenv = new DotEnv(ROOTPATH);
         $dotenv->load();
 
         CLI::write('Application\'s new encryption key was successfully set.', 'green');
@@ -156,7 +155,7 @@ class GenerateKey extends BaseCommand
     protected function writeNewEncryptionKeyToFile(string $oldKey, string $newKey): bool
     {
         $baseEnv = ROOTPATH . 'env';
-        $envFile = ((new Paths())->envDirectory ?? ROOTPATH) . '.env';
+        $envFile = ROOTPATH . '.env';
 
         if (! is_file($envFile)) {
             if (! is_file($baseEnv)) {

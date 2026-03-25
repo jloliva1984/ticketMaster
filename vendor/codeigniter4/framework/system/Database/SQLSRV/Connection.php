@@ -155,15 +155,23 @@ class Connection extends BaseConnection
         $errors = [];
 
         foreach (sqlsrv_errors() as $error) {
-            $errors[] = sprintf(
-                '%s SQLSTATE: %s, code: %s',
-                $error['message'],
-                $error['SQLSTATE'],
-                $error['code'],
-            );
+            $errors[] = $error['message']
+                . ' SQLSTATE: ' . $error['SQLSTATE'] . ', code: ' . $error['code'];
         }
 
         return implode("\n", $errors);
+    }
+
+    /**
+     * Keep or establish the connection if no queries have been sent for
+     * a length of time exceeding the server's idle timeout.
+     *
+     * @return void
+     */
+    public function reconnect()
+    {
+        $this->close();
+        $this->initialize();
     }
 
     /**
@@ -514,23 +522,17 @@ class Connection extends BaseConnection
      */
     protected function execute(string $sql)
     {
-        $stmt = ($this->scrollable === false || $this->isWriteType($sql))
-            ? sqlsrv_query($this->connID, $sql)
-            : sqlsrv_query($this->connID, $sql, [], ['Scrollable' => $this->scrollable]);
+        $stmt = ($this->scrollable === false || $this->isWriteType($sql)) ?
+            sqlsrv_query($this->connID, $sql) :
+            sqlsrv_query($this->connID, $sql, [], ['Scrollable' => $this->scrollable]);
 
         if ($stmt === false) {
-            $trace = debug_backtrace();
-            $first = array_shift($trace);
+            $error = $this->error();
 
-            log_message('error', "{message}\nin {exFile} on line {exLine}.\n{trace}", [
-                'message' => $this->getAllErrorMessages(),
-                'exFile'  => clean_path($first['file']),
-                'exLine'  => $first['line'],
-                'trace'   => render_backtrace($trace),
-            ]);
+            log_message('error', $error['message']);
 
             if ($this->DBDebug) {
-                throw new DatabaseException($this->getAllErrorMessages());
+                throw new DatabaseException($error['message']);
             }
         }
 

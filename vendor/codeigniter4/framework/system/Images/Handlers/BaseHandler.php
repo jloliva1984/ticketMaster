@@ -769,14 +769,4 @@ abstract class BaseHandler implements ImageHandlerInterface
     {
         return ($this->resource !== null) ? $this->_getHeight() : $this->height;
     }
-
-    /**
-     * Placeholder method for implementing metadata clearing logic.
-     *
-     * This method should be implemented to remove or reset metadata as needed.
-     */
-    public function clearMetadata(): static
-    {
-        return $this;
-    }
 }

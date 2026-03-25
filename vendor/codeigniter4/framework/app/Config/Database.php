@@ -177,7 +177,7 @@ class Database extends Config
         'swapPre'     => '',
         'encrypt'     => false,
         'compress'    => false,
-        'strictOn'    => true,
+        'strictOn'    => false,
         'failover'    => [],
         'port'        => 3306,
         'foreignKeys' => true,
