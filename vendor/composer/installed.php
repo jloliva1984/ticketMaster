@@ -3,7 +3,7 @@
         'name' => 'ticketmaster/app',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '75336e37ba7ec7338d8ca26ecd3145bb651eb268',
+        'reference' => '099c7c0f558881f4feee016024d37899c2f2a9b4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'codeigniter4/framework' => array(
-            'pretty_version' => 'v4.6.5',
-            'version' => '4.6.5.0',
-            'reference' => '116e0919590a412c09d2b9e4f6b8addda18224d8',
+            'pretty_version' => 'v4.5.8',
+            'version' => '4.5.8.0',
+            'reference' => '80204755e06c4545144abda345116fe98dd5b559',
             'type' => 'project',
             'install_path' => __DIR__ . '/../codeigniter4/framework',
             'aliases' => array(),
@@ -400,7 +400,7 @@
         'ticketmaster/app' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '75336e37ba7ec7338d8ca26ecd3145bb651eb268',
+            'reference' => '099c7c0f558881f4feee016024d37899c2f2a9b4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

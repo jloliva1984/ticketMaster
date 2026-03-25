@@ -2,35 +2,35 @@
     "packages": [
         {
             "name": "codeigniter4/framework",
-            "version": "v4.6.5",
-            "version_normalized": "4.6.5.0",
+            "version": "v4.5.8",
+            "version_normalized": "4.5.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "116e0919590a412c09d2b9e4f6b8addda18224d8"
+                "reference": "80204755e06c4545144abda345116fe98dd5b559"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/116e0919590a412c09d2b9e4f6b8addda18224d8",
-                "reference": "116e0919590a412c09d2b9e4f6b8addda18224d8",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/80204755e06c4545144abda345116fe98dd5b559",
+                "reference": "80204755e06c4545144abda345116fe98dd5b559",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
                 "ext-mbstring": "*",
-                "laminas/laminas-escaper": "^2.17",
+                "laminas/laminas-escaper": "^2.13",
                 "php": "^8.1",
                 "psr/log": "^3.0"
             },
             "require-dev": {
                 "codeigniter/coding-standard": "^1.7",
-                "fakerphp/faker": "^1.24",
+                "fakerphp/faker": "^1.9",
                 "friendsofphp/php-cs-fixer": "^3.47.1",
-                "kint-php/kint": "^6.1",
-                "mikey179/vfsstream": "^1.6.12",
+                "kint-php/kint": "^5.0.4",
+                "mikey179/vfsstream": "^1.6",
                 "nexusphp/cs-config": "^3.6",
                 "phpunit/phpunit": "^10.5.16 || ^11.2",
-                "predis/predis": "^3.0"
+                "predis/predis": "^1.1 || ^2.0"
             },
             "suggest": {
                 "ext-curl": "If you use CURLRequest class",
@@ -53,7 +53,7 @@
                 "ext-sqlsrv": "If you use SQL Server",
                 "ext-xdebug": "If you use CIUnitTestCase::assertHeaderEmitted()"
             },
-            "time": "2026-02-01T17:59:34+00:00",
+            "time": "2025-01-19T16:13:02+00:00",
             "type": "project",
             "installation-source": "dist",
             "autoload": {

@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace CodeIgniter\Honeypot\Exceptions;
 
 use CodeIgniter\Exceptions\ConfigException;
+use CodeIgniter\Exceptions\ExceptionInterface;
 
-class HoneypotException extends ConfigException
+class HoneypotException extends ConfigException implements ExceptionInterface
 {
     /**
      * Thrown when the template value of config is empty.
@@ -41,8 +42,6 @@ class HoneypotException extends ConfigException
      * Thrown when the hidden value of config is false.
      *
      * @return static
-     *
-     * @deprecated 4.6.4 Never used.
      */
     public static function forNoHiddenValue()
     {

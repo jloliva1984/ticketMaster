@@ -397,7 +397,7 @@ class Toolbar
             helper('filesystem');
 
             // Updated to microtime() so we can get history
-            $time = sprintf('%.6F', Time::now()->format('U.u'));
+            $time = sprintf('%.6f', Time::now()->format('U.u'));
 
             if (! is_dir(WRITEPATH . 'debugbar')) {
                 mkdir(WRITEPATH . 'debugbar', 0777);
@@ -512,7 +512,7 @@ class Toolbar
     {
         $data = json_decode($data, true);
 
-        if (preg_match('/\d+\.\d{6}/s', (string) service('request')->getGet('debugbar_time'), $debugbarTime)) {
+        if ($this->config->maxHistory !== 0 && preg_match('/\d+\.\d{6}/s', (string) service('request')->getGet('debugbar_time'), $debugbarTime)) {
             $history = new History();
             $history->setFiles(
                 $debugbarTime[0],

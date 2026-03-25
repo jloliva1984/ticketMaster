@@ -11,20 +11,22 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\HTTP\Exceptions;
+namespace CodeIgniter\Router\Exceptions;
 
 use CodeIgniter\Exceptions\HTTPExceptionInterface;
-use RuntimeException;
+use Exception;
 
 /**
- * 400 Bad Request
+ * RedirectException
+ *
+ * @deprecated Use \CodeIgniter\HTTP\Exceptions\RedirectException instead
  */
-class BadRequestException extends RuntimeException implements HTTPExceptionInterface
+class RedirectException extends Exception implements HTTPExceptionInterface
 {
     /**
-     * HTTP status code for Bad Request
+     * HTTP status code for redirects
      *
      * @var int
      */
-    protected $code = 400; // @phpstan-ignore-line
+    protected $code = 302;
 }

@@ -17,6 +17,9 @@ use CodeIgniter\I18n\Time;
 use DateTime;
 use Exception;
 
+/**
+ * Class DatetimeCast
+ */
 class DatetimeCast extends BaseCast
 {
     /**
@@ -37,7 +40,7 @@ class DatetimeCast extends BaseCast
         }
 
         if (is_numeric($value)) {
-            return Time::createFromTimestamp((int) $value, date_default_timezone_get());
+            return Time::createFromTimestamp((int) $value);
         }
 
         if (is_string($value)) {

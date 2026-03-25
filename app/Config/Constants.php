@@ -7,6 +7,9 @@
  */
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
+// Safety fallback: disable debug mode unless explicitly enabled by Boot/environment.php
+defined('CI_DEBUG') || define('CI_DEBUG', false);
+
 /*
  | --------------------------------------------------------------------------
  | Composer Path

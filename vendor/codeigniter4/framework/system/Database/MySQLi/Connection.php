@@ -15,8 +15,7 @@ namespace CodeIgniter\Database\MySQLi;
 
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\Database\TableName;
-use CodeIgniter\Exceptions\LogicException;
+use LogicException;
 use mysqli;
 use mysqli_result;
 use mysqli_sql_exception;
@@ -83,16 +82,6 @@ class Connection extends BaseConnection
     public $numberNative = false;
 
     /**
-     * Use MYSQLI_CLIENT_FOUND_ROWS
-     *
-     * Whether affectedRows() should return number of rows found,
-     * or number of rows changed, after an UPDATE query.
-     *
-     * @var bool
-     */
-    public $foundRows = false;
-
-    /**
      * Connect to the database.
      *
      * @return false|mysqli
@@ -123,7 +112,7 @@ class Connection extends BaseConnection
             $this->mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
         }
 
-        if ($this->strictOn !== null) {
+        if (isset($this->strictOn)) {
             if ($this->strictOn) {
                 $this->mysqli->options(
                     MYSQLI_INIT_COMMAND,
@@ -193,10 +182,6 @@ class Connection extends BaseConnection
             $clientFlags += MYSQLI_CLIENT_SSL;
         }
 
-        if ($this->foundRows) {
-            $clientFlags += MYSQLI_CLIENT_FOUND_ROWS;
-        }
-
         try {
             if ($this->mysqli->real_connect(
                 $hostname,
@@ -207,6 +192,21 @@ class Connection extends BaseConnection
                 $socket,
                 $clientFlags,
             )) {
+                // Prior to version 5.7.3, MySQL silently downgrades to an unencrypted connection if SSL setup fails
+                if (($clientFlags & MYSQLI_CLIENT_SSL) !== 0 && version_compare($this->mysqli->client_info, 'mysqlnd 5.7.3', '<=')
+                    && empty($this->mysqli->query("SHOW STATUS LIKE 'ssl_cipher'")->fetch_object()->Value)
+                ) {
+                    $this->mysqli->close();
+                    $message = 'MySQLi was configured for an SSL connection, but got an unencrypted connection instead!';
+                    log_message('error', $message);
+
+                    if ($this->DBDebug) {
+                        throw new DatabaseException($message);
+                    }
+
+                    return false;
+                }
+
                 if (! $this->mysqli->set_charset($this->charset)) {
                     log_message('error', "Database: Unable to set the configured connection charset ('{$this->charset}').");
 
@@ -408,19 +408,10 @@ class Connection extends BaseConnection
 
     /**
      * Generates a platform-specific query string so that the column names can be fetched.
-     *
-     * @param string|TableName $table
      */
-    protected function _listColumns($table = ''): string
+    protected function _listColumns(string $table = ''): string
     {
-        $tableName = $this->protectIdentifiers(
-            $table,
-            true,
-            null,
-            false,
-        );
-
-        return 'SHOW COLUMNS FROM ' . $tableName;
+        return 'SHOW COLUMNS FROM ' . $this->protectIdentifiers($table, true, null, false);
     }
 
     /**
@@ -610,6 +601,8 @@ class Connection extends BaseConnection
      */
     protected function _transBegin(): bool
     {
+        $this->connID->autocommit(false);
+
         return $this->connID->begin_transaction();
     }
 
@@ -618,7 +611,13 @@ class Connection extends BaseConnection
      */
     protected function _transCommit(): bool
     {
-        return $this->connID->commit();
+        if ($this->connID->commit()) {
+            $this->connID->autocommit(true);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -626,6 +625,12 @@ class Connection extends BaseConnection
      */
     protected function _transRollback(): bool
     {
-        return $this->connID->rollback();
+        if ($this->connID->rollback()) {
+            $this->connID->autocommit(true);
+
+            return true;
+        }
+
+        return false;
     }
 }
