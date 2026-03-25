@@ -93,6 +93,25 @@ class TaskTicketModel extends Model
         return $this->db->query($sql)->getResultArray();
     }
 
+    /** Count of unmatched task tickets — used by dashboard */
+    public function unmatchedCount(): int
+    {
+        $sql = "SELECT COUNT(*) AS cnt
+                FROM task_tickets tt
+                LEFT JOIN tasks t ON t.id = tt.task_id AND t.deleted_at IS NULL
+                WHERE t.deleted_at IS NULL
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM invoice_tickets it
+                      JOIN invoices i ON i.id = it.invoice_id AND i.deleted_at IS NULL
+                      WHERE it.cantera_id = tt.cantera_id
+                        AND CAST(it.no_ticket AS UNSIGNED) = CAST(tt.no_ticket AS UNSIGNED)
+                  )";
+
+        $row = $this->db->query($sql)->getRowArray();
+        return (int)($row['cnt'] ?? 0);
+    }
+
     /** Single task ticket row (for modal prefill) */
     public function findWithDetails(int $id): ?array
     {

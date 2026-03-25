@@ -71,12 +71,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">
-                                    <i class="bi bi-inbox fs-3 d-block mb-1"></i>
-                                    <?= lang('General.no_data') ?>
-                                </td>
-                            </tr>
+                            <?php if (empty($recentInvoices)): ?>
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-3 d-block mb-1"></i>
+                                        <?= lang('General.no_data') ?>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($recentInvoices as $inv): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?= site_url('invoices/' . $inv['id'] . '/show') ?>">
+                                            <?= esc($inv['no_factura']) ?>
+                                        </a>
+                                    </td>
+                                    <td><?= $inv['fecha'] ? date('m/d/Y', strtotime($inv['fecha'])) : '—' ?></td>
+                                    <td><?= esc($inv['nombre_cantera'] ?? '—') ?></td>
+                                    <td>$<?= number_format((float)$inv['monto_total'], 2) ?></td>
+                                    <td>
+                                        <?php
+                                            $badge = match($inv['status']) {
+                                                'paid'     => 'success',
+                                                'received' => 'info',
+                                                default    => 'warning',
+                                            };
+                                        ?>
+                                        <span class="badge bg-<?= $badge ?>">
+                                            <?= lang('General.status_' . $inv['status']) ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -101,7 +128,7 @@
                                 <div class="text-muted font-sm"><?= esc($truck['nombre_chofer']) ?></div>
                             </div>
                             <span class="badge bg-primary-subtle text-primary">
-                                <?= $truck['task_count'] ?? 0 ?> <?= lang('General.tasks') ?>
+                                $<?= number_format((float)($truck['total_amount'] ?? 0), 0) ?>
                             </span>
                         </div>
                     <?php endforeach; ?>
