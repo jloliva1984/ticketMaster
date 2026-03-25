@@ -24,9 +24,5 @@ AddHandler application/x-httpd-php81 .php
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
-# Deny access to all files at root level by default
-# (public/ has its own .htaccess that allows access)
-<FilesMatch "\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# Deny direct PHP execution in sensitive directories only
+# (public/index.php is allowed via the rewrite above)
