@@ -258,7 +258,7 @@ class Tasks extends BaseController
                 'no_ticket'    => trim($t['no_ticket']),
                 'fecha'        => $this->parseDate($t['fecha'] ?? '') ?: date('Y-m-d'),
                 'tipo_trabajo' => $t['tipo_trabajo'] ?? null,
-                'cantera_id'   => null,
+                'cantera_id'   => ! empty($t['cantera_id']) ? (int) $t['cantera_id'] : null,
                 'direccion'    => $t['direccion'] ?? null,
                 'rate'         => (float) ($t['rate'] ?? 0),
                 'created_at'   => $now,
