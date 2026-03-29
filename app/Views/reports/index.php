@@ -204,5 +204,3 @@
 <?php endif; ?>
 
 <?= $this->endSection() ?>
-
-<?= $this->endSection() ?>
