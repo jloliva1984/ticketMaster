@@ -26,9 +26,9 @@ class InvoiceModel extends Model
 
     protected $validationRules = [
         'no_factura' => 'required|max_length[50]|is_unique[invoices.no_factura,id,{id}]',
-        'fecha'      => 'required|valid_date[m/d/Y]',
+        'fecha'      => 'required|valid_date[Y-m-d]',
         'cantera_id' => 'required|integer|is_not_unique[quarries.id]',
-        'due_date'   => 'permit_empty|valid_date[m/d/Y]',
+        'due_date'   => 'permit_empty|valid_date[Y-m-d]',
     ];
 
     protected $validationMessages = [
