@@ -104,7 +104,6 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
                         <th style="width:120px">No. Ticket</th>
                         <th style="width:115px">Fecha</th>
                         <th style="width:130px">Tipo Trabajo</th>
-                        <th style="width:155px">Cantera</th>
                         <th>Dirección</th>
                         <th style="width:100px">Rate ($)</th>
                         <th style="width:40px"></th>
@@ -120,22 +119,11 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
                                    value="<?= date('m/d/Y', strtotime($t['fecha'])) ?>"></td>
                         <td><input type="text" name="tickets[<?= $i ?>][tipo_trabajo]"
                                    class="form-control" value="<?= esc($t['tipo_trabajo'] ?? '') ?>"></td>
-                        <td>
-                            <select name="tickets[<?= $i ?>][cantera_id]" class="form-select">
-                                <option value="">—</option>
-                                <?php foreach ($quarries as $q): ?>
-                                    <option value="<?= $q['id'] ?>"
-                                        <?= ($t['cantera_id'] == $q['id']) ? 'selected' : '' ?>>
-                                        <?= esc($q['nombre_cantera']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
                         <td><input type="text" name="tickets[<?= $i ?>][direccion]"
                                    class="form-control" value="<?= esc($t['direccion'] ?? '') ?>"></td>
                         <td><input type="number" name="tickets[<?= $i ?>][rate]"
                                    class="form-control rate-input" step="0.01" min="0"
-                                   value="<?= number_format($t['rate'], 2) ?>"></td>
+                                   value="<?= number_format((float)$t['rate'], 2, '.', '') ?>"></td>
                         <td>
                             <button type="button" class="btn btn-sm btn-outline-danger btn-remove-row">
                                 <i class="bi bi-trash"></i>
@@ -177,14 +165,6 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
         <td><input type="text" name="tickets[__IDX__][no_ticket]" class="form-control" required></td>
         <td><input type="text" name="tickets[__IDX__][fecha]" class="form-control" placeholder="mm/dd/yyyy"></td>
         <td><input type="text" name="tickets[__IDX__][tipo_trabajo]" class="form-control"></td>
-        <td>
-            <select name="tickets[__IDX__][cantera_id]" class="form-select">
-                <option value="">—</option>
-                <?php foreach ($quarries as $q): ?>
-                    <option value="<?= $q['id'] ?>"><?= esc($q['nombre_cantera']) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </td>
         <td><input type="text" name="tickets[__IDX__][direccion]" class="form-control"></td>
         <td><input type="number" name="tickets[__IDX__][rate]" class="form-control rate-input" step="0.01" min="0" value="0.00"></td>
         <td>
