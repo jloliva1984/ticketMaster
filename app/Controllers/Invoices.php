@@ -96,8 +96,8 @@ class Invoices extends BaseController
 
         $invoiceId = $this->model->insert($this->buildInvoiceData(), true);
         $tickets   = $this->request->getPost('tickets') ?? [];
-        log_message('warning', '[Invoice store] tickets received: ' . json_encode($tickets));
-        $this->saveTickets($invoiceId, $tickets);
+        $cantaraId = (int) $this->request->getPost('cantera_id');
+        $this->saveTickets($invoiceId, $tickets, $cantaraId);
 
         $db->transComplete();
 
@@ -106,7 +106,7 @@ class Invoices extends BaseController
             return $this->jsonError('Failed to save invoice.', 500);
         }
 
-        return $this->jsonSuccess(lang('General.saved'), ['id' => $invoiceId, '_debug_tickets' => $tickets]);
+        return $this->jsonSuccess(lang('General.saved'), ['id' => $invoiceId]);
     }
 
     // ── GET /invoices/{id}/edit ───────────────────────────────────
@@ -151,7 +151,8 @@ class Invoices extends BaseController
 
         $this->model->update($id, $data);
         $this->ticketModel->deleteForInvoice($id);
-        $this->saveTickets($id, $this->request->getPost('tickets') ?? []);
+        $cantaraId = (int) $this->request->getPost('cantera_id');
+        $this->saveTickets($id, $this->request->getPost('tickets') ?? [], $cantaraId);
 
         $db->transComplete();
 
@@ -346,7 +347,7 @@ class Invoices extends BaseController
         return $data;
     }
 
-    private function saveTickets(int $invoiceId, array $tickets): void
+    private function saveTickets(int $invoiceId, array $tickets, int $cantaraId = 0): void
     {
         if (empty($tickets)) {
             return;
@@ -364,7 +365,7 @@ class Invoices extends BaseController
                 'no_ticket'    => trim($t['no_ticket']),
                 'fecha'        => $this->parseDate($t['fecha'] ?? '') ?: date('Y-m-d'),
                 'tipo_trabajo' => $t['tipo_trabajo'] ?? null,
-                'cantera_id'   => ! empty($t['cantera_id']) ? (int) $t['cantera_id'] : null,
+                'cantera_id'   => $cantaraId ?: null,
                 'direccion'    => $t['direccion'] ?? null,
                 'rate'         => (float) ($t['rate'] ?? 0),
                 'created_at'   => $now,
