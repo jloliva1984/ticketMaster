@@ -95,15 +95,18 @@ class Invoices extends BaseController
         $db->transStart();
 
         $invoiceId = $this->model->insert($this->buildInvoiceData(), true);
-        $this->saveTickets($invoiceId, $this->request->getPost('tickets') ?? []);
+        $tickets   = $this->request->getPost('tickets') ?? [];
+        log_message('warning', '[Invoice store] tickets received: ' . json_encode($tickets));
+        $this->saveTickets($invoiceId, $tickets);
 
         $db->transComplete();
 
         if (! $db->transStatus()) {
+            log_message('error', '[Invoice store] transaction failed. DB error: ' . json_encode($db->error()));
             return $this->jsonError('Failed to save invoice.', 500);
         }
 
-        return $this->jsonSuccess(lang('General.saved'), ['id' => $invoiceId]);
+        return $this->jsonSuccess(lang('General.saved'), ['id' => $invoiceId, '_debug_tickets' => $tickets]);
     }
 
     // ── GET /invoices/{id}/edit ───────────────────────────────────
