@@ -77,11 +77,10 @@ class TaskTicketModel extends Model
                     tr.no_camion,
                     q.nombre_cantera
                 FROM task_tickets tt
-                LEFT JOIN tasks    t  ON t.id  = tt.task_id  AND t.deleted_at IS NULL
+                JOIN tasks    t  ON t.id  = tt.task_id  AND t.deleted_at IS NULL
                 LEFT JOIN trucks   tr ON tr.id = t.truck_id
                 LEFT JOIN quarries q  ON q.id  = tt.cantera_id
-                WHERE t.deleted_at IS NULL
-                  AND NOT EXISTS (
+                WHERE NOT EXISTS (
                       SELECT 1
                       FROM invoice_tickets it
                       JOIN invoices i ON i.id = it.invoice_id AND i.deleted_at IS NULL
@@ -98,9 +97,8 @@ class TaskTicketModel extends Model
     {
         $sql = "SELECT COUNT(*) AS cnt
                 FROM task_tickets tt
-                LEFT JOIN tasks t ON t.id = tt.task_id AND t.deleted_at IS NULL
-                WHERE t.deleted_at IS NULL
-                  AND NOT EXISTS (
+                JOIN tasks t ON t.id = tt.task_id AND t.deleted_at IS NULL
+                WHERE NOT EXISTS (
                       SELECT 1
                       FROM invoice_tickets it
                       JOIN invoices i ON i.id = it.invoice_id AND i.deleted_at IS NULL
