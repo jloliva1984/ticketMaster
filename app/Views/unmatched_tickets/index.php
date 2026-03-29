@@ -159,46 +159,49 @@ function openMatch(taskTicketId, canterId) {
     }
 
     // Fetch candidate invoice tickets
-    tmAjax('GET', CANDIDATES_URL + '?cantera_id=' + canterId, null, function (res) {
-        const tbody = document.getElementById('candidateRows');
-        if (!res.data || res.data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3"><?= lang('General.no_candidates') ?></td></tr>';
-            return;
-        }
-        tbody.innerHTML = res.data.map(r =>
-            `<tr>
-                <td><strong>${escHtml(r.no_ticket)}</strong></td>
-                <td>${r.fecha ? fmtDate(r.fecha) : '—'}</td>
-                <td>${escHtml(r.tipo_trabajo ?? '—')}</td>
-                <td>${escHtml(r.no_factura ?? '—')}</td>
-                <td>
-                    <button class="btn btn-sm btn-success"
-                        onclick="doMatch(${r.id})">
-                        <i class="bi bi-check-lg me-1"></i><?= lang('General.match') ?>
-                    </button>
-                </td>
-            </tr>`
-        ).join('');
-    }, function (err) {
-        document.getElementById('candidateRows').innerHTML =
-            '<tr><td colspan="5" class="text-center text-danger">' + (err.message || '<?= lang('General.error_generic') ?>') + '</td></tr>';
-    });
+    tmAjax(CANDIDATES_URL + '?cantera_id=' + canterId, { method: 'GET' })
+        .then(res => {
+            const tbody = document.getElementById('candidateRows');
+            if (!res.data || res.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3"><?= lang('General.no_candidates') ?></td></tr>';
+                return;
+            }
+            tbody.innerHTML = res.data.map(r =>
+                `<tr>
+                    <td><strong>${escHtml(r.no_ticket)}</strong></td>
+                    <td>${r.fecha ? fmtDate(r.fecha) : '—'}</td>
+                    <td>${escHtml(r.tipo_trabajo ?? '—')}</td>
+                    <td>${escHtml(r.no_factura ?? '—')}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success"
+                            onclick="doMatch(${r.id})">
+                            <i class="bi bi-check-lg me-1"></i><?= lang('General.match') ?>
+                        </button>
+                    </td>
+                </tr>`
+            ).join('');
+        })
+        .catch(err => {
+            document.getElementById('candidateRows').innerHTML =
+                '<tr><td colspan="5" class="text-center text-danger">' + (err.message || '<?= lang('General.error_generic') ?>') + '</td></tr>';
+        });
 }
 
 function doMatch(invoiceTicketId) {
     if (!currentTaskTicketId) return;
 
-    tmAjax('POST', MATCH_URL + '/' + currentTaskTicketId,
-        { invoice_ticket_id: invoiceTicketId },
-        function () {
+    const body = new FormData();
+    body.append('invoice_ticket_id', invoiceTicketId);
+
+    tmAjax(MATCH_URL + '/' + currentTaskTicketId, { method: 'POST', body })
+        .then(() => {
             bootstrap.Modal.getInstance(document.getElementById('matchModal')).hide();
             showToast('<?= lang('General.matched') ?>', 'success');
             table.ajax.reload();
-        },
-        function (err) {
+        })
+        .catch(err => {
             showToast(err.message || '<?= lang('General.error_generic') ?>', 'danger');
-        }
-    );
+        });
 }
 
 function escHtml(str) {
