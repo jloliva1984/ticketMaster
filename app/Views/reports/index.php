@@ -205,15 +205,4 @@
 
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-document.querySelectorAll('.datepicker').forEach(el => {
-    flatpickr(el, { dateFormat: 'm/d/Y', allowInput: true });
-});
-</script>
 <?= $this->endSection() ?>

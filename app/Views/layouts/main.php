@@ -27,6 +27,9 @@
     <!-- App CSS (Mazer-inspired) -->
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
+    <!-- Flatpickr date picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <!-- Page-specific styles injected by child views -->
     <?= $this->renderSection('styles') ?>
 </head>
@@ -115,6 +118,9 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.bootstrap5.min.js"></script>
+
+<!-- Flatpickr date picker -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <!-- App JS -->
 <script src="<?= base_url('assets/js/app.js') ?>"></script>

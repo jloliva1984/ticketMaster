@@ -200,6 +200,15 @@ function exportTable(tableId, filename, format = 'excel') {
     window.location.href = window.location.pathname + '?' + params.toString();
 }
 
+// ── Flatpickr date pickers ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof flatpickr !== 'undefined') {
+        document.querySelectorAll('.date-input, .datepicker').forEach(el => {
+            flatpickr(el, { dateFormat: 'm/d/Y', allowInput: true });
+        });
+    }
+});
+
 // ── Expose globals ─────────────────────────────────────────────
 window.tmAjax        = tmAjax;
 window.showToast     = showToast;
