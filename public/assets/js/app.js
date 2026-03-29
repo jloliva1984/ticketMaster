@@ -85,7 +85,10 @@ document.querySelectorAll('.menu .submenu .active').forEach(item => {
 
 // ── AJAX CSRF helper ───────────────────────────────────────────
 const CSRF_TOKEN_NAME = document.querySelector('meta[name="csrf-token-name"]')?.content || 'csrf_token';
-const CSRF_HASH      = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+function getCsrfHash() {
+    return document.querySelector('meta[name="csrf-token"]')?.content || '';
+}
 
 /**
  * Perform an AJAX request with CSRF token automatically included.
@@ -101,13 +104,14 @@ async function tmAjax(url, options = {}) {
         ...options.headers,
     };
 
-    // For non-GET requests attach CSRF
+    // For non-GET requests attach CSRF (read fresh on every call)
     if (options.method && options.method.toUpperCase() !== 'GET') {
+        const csrfHash = getCsrfHash();
         if (options.body instanceof FormData) {
-            options.body.append(CSRF_TOKEN_NAME, CSRF_HASH);
+            options.body.append(CSRF_TOKEN_NAME, csrfHash);
         } else {
             headers['Content-Type'] = headers['Content-Type'] || 'application/json';
-            headers['X-CSRF-TOKEN'] = CSRF_HASH;
+            headers['X-CSRF-TOKEN'] = csrfHash;
         }
     }
 
@@ -121,7 +125,9 @@ async function tmAjax(url, options = {}) {
 
     if (!response.ok) {
         const err = await response.json().catch(() => ({ message: 'Request failed' }));
-        throw new Error(err.message || `HTTP ${response.status}`);
+        const error = new Error(err.message || `HTTP ${response.status}`);
+        error.errors = err.errors || null;
+        throw error;
     }
 
     return response.json();
