@@ -31,6 +31,7 @@ class Filters extends BaseConfig
         'locale'        => \App\Filters\LocaleFilter::class,
         'auth'          => \App\Filters\AuthFilter::class,
         'admin'         => \App\Filters\AdminFilter::class,
+        'csrftoken'     => \App\Filters\CsrfTokenFilter::class,
     ];
 
     /**
@@ -59,7 +60,7 @@ class Filters extends BaseConfig
                 'ping',
             ]],
         ],
-        'after' => [],
+        'after' => ['csrftoken'],
     ];
 
     /**
