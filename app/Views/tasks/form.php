@@ -124,7 +124,7 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
                         <td><input type="text" name="tickets[<?= $i ?>][no_ticket]"
                                    class="form-control" value="<?= esc($t['no_ticket']) ?>" required></td>
                         <td><input type="text" name="tickets[<?= $i ?>][fecha]"
-                                   class="form-control" placeholder="mm/dd/yyyy"
+                                   class="form-control date-input" placeholder="mm/dd/yyyy"
                                    value="<?= date('m/d/Y', strtotime($t['fecha'])) ?>"></td>
                         <td><input type="text" name="tickets[<?= $i ?>][tipo_trabajo]"
                                    class="form-control" value="<?= esc($t['tipo_trabajo'] ?? '') ?>"></td>
@@ -183,7 +183,7 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
 <template id="ticket-row-template">
     <tr>
         <td><input type="text" name="tickets[__IDX__][no_ticket]" class="form-control" required></td>
-        <td><input type="text" name="tickets[__IDX__][fecha]" class="form-control" placeholder="mm/dd/yyyy"></td>
+        <td><input type="text" name="tickets[__IDX__][fecha]" class="form-control date-input" placeholder="mm/dd/yyyy"></td>
         <td><input type="text" name="tickets[__IDX__][tipo_trabajo]" class="form-control"></td>
         <td>
             <select name="tickets[__IDX__][cantera_id]" class="form-select">
@@ -227,7 +227,10 @@ document.getElementById('btn-add-row').addEventListener('click', addRow);
 function addRow() {
     const tpl  = document.getElementById('ticket-row-template').innerHTML;
     const html = tpl.replaceAll('__IDX__', rowIndex++);
-    document.getElementById('tickets-body').insertAdjacentHTML('beforeend', html);
+    const body = document.getElementById('tickets-body');
+    body.insertAdjacentHTML('beforeend', html);
+    const lastRow = body.lastElementChild;
+    lastRow.querySelectorAll('.date-input').forEach(el => flatpickr(el, { dateFormat: 'm/d/Y', allowInput: true }));
     recalcTotal();
 }
 

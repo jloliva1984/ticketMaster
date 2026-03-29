@@ -210,7 +210,10 @@ document.getElementById('btn-add-row').addEventListener('click', addRow);
 function addRow() {
     const tpl  = document.getElementById('ticket-row-template').innerHTML;
     const html = tpl.replaceAll('__IDX__', rowIndex++);
-    document.getElementById('tickets-body').insertAdjacentHTML('beforeend', html);
+    const body = document.getElementById('tickets-body');
+    body.insertAdjacentHTML('beforeend', html);
+    const lastRow = body.lastElementChild;
+    lastRow.querySelectorAll('.date-input').forEach(el => flatpickr(el, { dateFormat: 'm/d/Y', allowInput: true }));
     recalcTotal();
 }
 
