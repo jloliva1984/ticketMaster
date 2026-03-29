@@ -62,7 +62,9 @@ class Tasks extends BaseController
                 'id'            => $r['id'],
                 'no_camion'     => esc($r['no_camion']),
                 'nombre_chofer' => esc($r['nombre_chofer']),
-                'periodo'       => esc($r['periodo'] ?? '—'),
+                'periodo'       => $r['fecha_inicio']
+                    ? date('m/d/Y', strtotime($r['fecha_inicio'])) . ' – ' . ($r['fecha_fin'] ? date('m/d/Y', strtotime($r['fecha_fin'])) : '…')
+                    : '—',
                 'monto_total'   => '$' . number_format($r['monto_total'], 2),
                 'status'        => $statusBadge,
                 'delivered'     => $deliverBtn,
@@ -233,7 +235,8 @@ class Tasks extends BaseController
         return [
             'truck_id'      => (int) $this->request->getPost('truck_id'),
             'nombre_chofer' => trim($this->request->getPost('nombre_chofer')),
-            'periodo'       => trim($this->request->getPost('periodo') ?? ''),
+            'fecha_inicio'  => $this->parseDate($this->request->getPost('fecha_inicio')) ?: null,
+            'fecha_fin'     => $this->parseDate($this->request->getPost('fecha_fin')) ?: null,
             'monto_total'   => $this->calcTotal($this->request->getPost('tickets') ?? []),
             'status'        => $this->request->getPost('status') ?? 'open',
             'notes'         => $this->request->getPost('notes'),

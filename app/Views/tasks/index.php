@@ -17,7 +17,7 @@
                         <th>#</th>
                         <th>Camión</th>
                         <th>Chofer</th>
-                        <th>Período</th>
+                        <th>Período / Fechas</th>
                         <th>Total</th>
                         <th>Estado</th>
                         <th>Delivered</th>

@@ -44,8 +44,11 @@ $isOpen   = $task['status'] === 'open';
                 <i class="bi bi-truck-front-fill me-2"></i><?= esc($task['no_camion']) ?>
             </h3>
             <div style="opacity:.85"><?= esc($task['nombre_chofer']) ?></div>
-            <?php if ($task['periodo']): ?>
-                <div style="font-size:.85rem;opacity:.7;margin-top:4px"><?= esc($task['periodo']) ?></div>
+            <?php if ($task['fecha_inicio']): ?>
+                <div style="font-size:.85rem;opacity:.7;margin-top:4px">
+                    <?= date('m/d/Y', strtotime($task['fecha_inicio'])) ?>
+                    <?= $task['fecha_fin'] ? ' – ' . date('m/d/Y', strtotime($task['fecha_fin'])) : '' ?>
+                </div>
             <?php endif; ?>
         </div>
         <div class="text-end">

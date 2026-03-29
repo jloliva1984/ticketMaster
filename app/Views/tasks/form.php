@@ -56,12 +56,20 @@ $formUrl = $isEdit ? base_url('tasks/' . $task['id']) : base_url('tasks');
                        required>
             </div>
 
-            <!-- Período -->
-            <div class="col-md-3">
-                <label class="form-label">Período</label>
-                <input type="text" name="periodo" class="form-control"
-                       value="<?= esc($isEdit ? ($task['periodo'] ?? '') : '') ?>"
-                       placeholder="e.g. March 2026">
+            <!-- Fecha Inicio -->
+            <div class="col-md-2">
+                <label class="form-label">Fecha Inicio</label>
+                <input type="text" name="fecha_inicio" class="form-control date-input"
+                       value="<?= ($isEdit && $task['fecha_inicio']) ? date('m/d/Y', strtotime($task['fecha_inicio'])) : '' ?>"
+                       placeholder="mm/dd/yyyy">
+            </div>
+
+            <!-- Fecha Fin -->
+            <div class="col-md-2">
+                <label class="form-label">Fecha Fin</label>
+                <input type="text" name="fecha_fin" class="form-control date-input"
+                       value="<?= ($isEdit && $task['fecha_fin']) ? date('m/d/Y', strtotime($task['fecha_fin'])) : '' ?>"
+                       placeholder="mm/dd/yyyy">
             </div>
 
             <!-- Status -->

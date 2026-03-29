@@ -15,7 +15,8 @@ class TaskModel extends Model
     protected $allowedFields = [
         'truck_id',
         'nombre_chofer',
-        'periodo',
+        'fecha_inicio',
+        'fecha_fin',
         'monto_total',
         'status',
         'delivered_at',
@@ -33,7 +34,7 @@ class TaskModel extends Model
     public function forDataTable(): array
     {
         return $this->db->table('tasks t')
-            ->select('t.id, t.nombre_chofer, t.periodo, t.monto_total,
+            ->select('t.id, t.nombre_chofer, t.fecha_inicio, t.fecha_fin, t.monto_total,
                       t.status, t.delivered_at, t.created_at,
                       tr.no_camion')
             ->join('trucks tr', 'tr.id = t.truck_id', 'left')
@@ -106,7 +107,7 @@ class TaskModel extends Model
     public function detailByTruck(int $truckId, string $from, string $to): array
     {
         return $this->db->table('tasks t')
-            ->select('t.id, t.periodo, t.status, t.monto_total, t.created_at,
+            ->select('t.id, t.fecha_inicio, t.fecha_fin, t.status, t.monto_total, t.created_at,
                       COUNT(tt.id) AS ticket_count')
             ->join('task_tickets tt', 'tt.task_id = t.id', 'left')
             ->where('t.deleted_at IS NULL')
